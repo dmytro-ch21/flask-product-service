@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request
+from db import close_db
 from controllers.product_controller import product_bp
 
 def create_app():
@@ -10,12 +11,15 @@ def create_app():
         return jsonify({"error": "Bad Request"}), 400
     
     @app.errorhandler(404)
-    def bad_request(error):
+    def not_found(error):
         return jsonify({"error": "Not Found"}), 404
     
     @app.errorhandler(500)
-    def bad_request(error):
+    def internal_server_error(error):
         return jsonify({"error": "Internal Server Error"}), 500
+    
+    # setting up the db
+    app.teardown_appcontext(close_db)
     
     return app
 
