@@ -1,14 +1,12 @@
 from flask import Blueprint, jsonify, request
 from services.product_service import ProductService
 
-product_bp = Blueprint("products", __name__, url_prefix="/v2")
-
+product_bp = Blueprint("products", __name__, url_prefix="/api/v2")
 
 @product_bp.route("/products", methods=["GET"])
 def get_products():
     products = ProductService.get_all_products()
     return jsonify([product.to_dict() for product in products])
-
 
 @product_bp.route("/products/<string:sku>", methods=["GET"])
 def get_product(sku):
@@ -16,7 +14,6 @@ def get_product(sku):
     if product:
         return jsonify(product.to_dict())
     return jsonify({"error": "Product not found"}), 404
-
 
 @product_bp.route("/products", methods=["POST"])
 def add_product():
